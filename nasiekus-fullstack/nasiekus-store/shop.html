@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — NASIEKU'S STORE</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="announce">FREE DELIVERY IN NAIROBI ON ORDERS OVER KES 5,000 <span>&middot;</span> STYLE THAT SPEAKS FOR YOU</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">NASIEKU'S <small>STORE</small></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="shop.html" id="navShop" aria-current="page">Shop</a>
+      <a href="shop.html?cat=clothes">Clothes</a>
+      <a href="shop.html?cat=shoes">Shoes</a>
+      <a href="shop.html?filter=new">New Arrivals</a>
+      <a href="shop.html?filter=offers">Offers</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-icons">
+      <button class="icon-btn" id="searchToggle" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <a class="icon-btn" href="account.html" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.6-3.6 5-5.4 7.5-5.4s5.9 1.8 7.5 5.4"/></svg>
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20.2s-7.6-4.6-9.8-9.2C.6 7.4 2.4 4 6 4c2.1 0 3.7 1.3 6 3.9C14.3 5.3 15.9 4 18 4c3.6 0 5.4 3.4 3.8 7-2.2 4.6-9.8 9.2-9.8 9.2z"/></svg>
+      </a>
+      <button class="icon-btn" id="cartToggle" aria-label="Shopping bag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8h12l1 12.5a1 1 0 01-1 1.1H6a1 1 0 01-1-1.1L6 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg>
+        <span class="icon-badge" data-cart-count style="display:none">0</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-header">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Home</a> / <span id="crumbCurrent">Shop</span></div>
+      <h1 id="pageTitle">All Products</h1>
+      <p id="pageSub">Browse the full NASIEKU'S STORE collection — fashion, footwear and seasonal edits.</p>
+    </div>
+  </div>
+
+  <div class="wrap shop-layout">
+    <aside class="filters" id="filters">
+      <button type="button" class="btn btn-outline filter-toggle-mobile" id="filterToggleMobile" style="margin-bottom:20px;">Filter &amp; Sort</button>
+
+      <div class="filter-block">
+        <h4>CATEGORY</h4>
+        <label class="filter-opt"><input type="radio" name="cat" value="all" checked> All Products</label>
+        <label class="filter-opt"><input type="radio" name="cat" value="clothes"> Clothes</label>
+        <label class="filter-opt"><input type="radio" name="cat" value="shoes"> Shoes</label>
+      </div>
+
+      <div class="filter-block">
+        <h4>COLLECTION</h4>
+        <label class="filter-opt"><input type="checkbox" name="collection" value="new"> New Arrivals</label>
+        <label class="filter-opt"><input type="checkbox" name="collection" value="offers"> Offers &amp; Sale</label>
+      </div>
+
+      <div class="filter-block">
+        <h4>PRICE</h4>
+        <div class="price-range">
+          <input type="range" id="priceMax" min="2000" max="8000" step="100" value="8000">
+          <span id="priceMaxLabel" style="font-size:.85rem;color:var(--ink-soft);">Up to KES 8,000</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-outline btn-block" id="clearFilters">Clear filters</button>
+    </aside>
+
+    <div class="shop-results">
+      <div class="active-chips" id="activeChips"></div>
+      <div class="shop-toolbar">
+        <div class="result-count" id="resultCount">Showing products</div>
+        <select class="sort-select" id="sortSelect">
+          <option value="featured">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="new">Newest First</option>
+        </select>
+      </div>
+      <div class="product-grid" id="shopGrid"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-about">
+      <a href="index.html" class="logo">NASIEKU'S</a>
+      <p>Style That Speaks for You. Curated fashion, footwear and accessories delivered across Kenya.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3v10.5a3.5 3.5 0 11-3.5-3.5"/><path d="M15 3c.4 2.6 2.1 4.4 4.5 4.7"/></svg></a>
+        <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20l1.3-3.9A7.8 7.8 0 1112 19.8a7.7 7.7 0 01-4-1.1z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>SHOP</h4>
+      <ul>
+        <li><a href="shop.html">All Products</a></li>
+        <li><a href="shop.html?cat=clothes">Clothes</a></li>
+        <li><a href="shop.html?cat=shoes">Shoes</a></li>
+        <li><a href="shop.html?filter=new">New Arrivals</a></li>
+        <li><a href="shop.html?filter=offers">Offers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>CUSTOMER SERVICE</h4>
+      <ul>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="shipping.html">Shipping &amp; Delivery</a></li>
+        <li><a href="returns.html">Returns &amp; Refunds</a></li>
+        <li><a href="track-order.html">Track Order</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-contact">
+      <h4>GET IN TOUCH</h4>
+      <ul>
+        <li><a href="tel:+254748525386">+254 748 525 386</a></li>
+        <li><a href="mailto:simonparsalat@gmail.com">simonparsalat@gmail.com</a></li>
+        <li>Nairobi, Kenya</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <div>&copy; <span data-year></span> NASIEKU'S STORE. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="admin-login.html">Admin Login</a>
+    </div>
+    <div class="pay-methods">M-PESA &middot; CARD &middot; CASH ON DELIVERY</div>
+  </div>
+</footer>
+
+<div class="overlay-scrim" id="scrim"></div>
+<div class="search-panel" id="searchPanel">
+  <div class="wrap">
+    <form id="searchForm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search for products…" autocomplete="off">
+      <button type="button" class="close" id="searchClose" aria-label="Close search">&times;</button>
+    </form>
+  </div>
+</div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag">
+  <div class="cart-head"><h3>Your Bag</h3><button class="close" id="cartClose" aria-label="Close bag">&times;</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">KES 0</span></div>
+    <a href="cart.html" class="btn btn-primary btn-block">View Bag &amp; Checkout</a>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(async function(){
+  await loadProducts();
+  const params = new URLSearchParams(window.location.search);
+  const state = {
+    cat: params.get("cat") || "all",
+    collection: params.get("filter") ? [params.get("filter")] : [],
+    q: params.get("q") || "",
+    maxPrice: 8000,
+    sort: "featured"
+  };
+
+  const catRadios = document.querySelectorAll('input[name="cat"]');
+  const collectionBoxes = document.querySelectorAll('input[name="collection"]');
+  const priceMax = document.getElementById("priceMax");
+  const priceMaxLabel = document.getElementById("priceMaxLabel");
+  const sortSelect = document.getElementById("sortSelect");
+
+  function syncControlsFromState(){
+    catRadios.forEach(r => r.checked = (r.value === state.cat));
+    collectionBoxes.forEach(c => c.checked = state.collection.includes(c.value));
+    priceMax.value = state.maxPrice;
+    priceMaxLabel.textContent = "Up to " + formatKES(state.maxPrice);
+  }
+
+  function titleFor(){
+    if (state.q) return `Results for “${state.q}”`;
+    if (state.collection.includes("new")) return "New Arrivals";
+    if (state.collection.includes("offers")) return "Offers";
+    if (state.cat === "clothes") return "Clothes";
+    if (state.cat === "shoes") return "Shoes";
+    return "All Products";
+  }
+
+  function applyFilters(){
+    let list = PRODUCTS.slice();
+
+    if (state.q){
+      const q = state.q.toLowerCase();
+      list = list.filter(p => p.name.toLowerCase().includes(q) || p.type.toLowerCase().includes(q));
+    }
+    if (state.cat !== "all"){
+      list = list.filter(p => p.category === state.cat);
+    }
+    if (state.collection.includes("new")){
+      list = list.filter(p => p.isNew);
+    }
+    if (state.collection.includes("offers")){
+      list = list.filter(p => p.oldPrice);
+    }
+    list = list.filter(p => p.price <= state.maxPrice);
+
+    switch(state.sort){
+      case "price-asc": list.sort((a,b) => a.price - b.price); break;
+      case "price-desc": list.sort((a,b) => b.price - a.price); break;
+      case "new": list.sort((a,b) => (b.isNew?1:0) - (a.isNew?1:0)); break;
+    }
+
+    document.getElementById("pageTitle").textContent = titleFor();
+    document.getElementById("crumbCurrent").textContent = titleFor();
+    document.getElementById("resultCount").textContent = `Showing ${list.length} of ${PRODUCTS.length} products`;
+    renderProducts("shopGrid", list);
+    renderChips();
+  }
+
+  function renderChips(){
+    const chips = [];
+    if (state.cat !== "all") chips.push({ label: state.cat === "clothes" ? "Clothes" : "Shoes", clear: () => state.cat = "all" });
+    state.collection.forEach(c => chips.push({ label: c === "new" ? "New Arrivals" : "Offers", clear: () => state.collection = state.collection.filter(x => x !== c) }));
+    if (state.maxPrice < 8000) chips.push({ label: "Up to " + formatKES(state.maxPrice), clear: () => { state.maxPrice = 8000; } });
+    if (state.q) chips.push({ label: `“${state.q}”`, clear: () => state.q = "" });
+
+    const el = document.getElementById("activeChips");
+    el.innerHTML = chips.map((c, i) => `<span class="chip">${c.label}<button type="button" data-chip="${i}" aria-label="Remove filter">&times;</button></span>`).join("");
+    el.querySelectorAll("button[data-chip]").forEach((btn, i) => {
+      btn.addEventListener("click", () => { chips[i].clear(); syncControlsFromState(); applyFilters(); });
+    });
+  }
+
+  catRadios.forEach(r => r.addEventListener("change", () => { state.cat = r.value; applyFilters(); }));
+  collectionBoxes.forEach(c => c.addEventListener("change", () => {
+    state.collection = Array.from(collectionBoxes).filter(x => x.checked).map(x => x.value);
+    applyFilters();
+  }));
+  priceMax.addEventListener("input", () => {
+    state.maxPrice = Number(priceMax.value);
+    priceMaxLabel.textContent = "Up to " + formatKES(state.maxPrice);
+    applyFilters();
+  });
+  sortSelect.addEventListener("change", () => { state.sort = sortSelect.value; applyFilters(); });
+  document.getElementById("clearFilters").addEventListener("click", () => {
+    state.cat = "all"; state.collection = []; state.maxPrice = 8000; state.q = "";
+    syncControlsFromState(); applyFilters();
+  });
+  document.getElementById("filterToggleMobile").addEventListener("click", () => {
+    document.getElementById("filters").classList.toggle("open");
+  });
+
+  syncControlsFromState();
+  applyFilters();
+})();
+</script>
+</body>
+</html>

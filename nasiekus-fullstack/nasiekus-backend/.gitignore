@@ -1,0 +1,8 @@
+node_modules/
+.env
+db/nasiekus.db
+db/nasiekus.db-shm
+db/nasiekus.db-wal
+uploads/*
+!uploads/.gitkeep
+npm-debug.log

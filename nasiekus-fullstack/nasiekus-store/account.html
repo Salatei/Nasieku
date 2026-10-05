@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Account — NASIEKU'S STORE</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .auth-tabs{ display:flex; gap:8px; margin-bottom:28px; }
+  .auth-tab{ flex:1; padding:12px; text-align:center; border:1px solid var(--line); background:#fff; font-size:.92rem; }
+  .auth-tab.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .auth-panel{ display:none; }
+  .auth-panel.active{ display:block; }
+  .auth-error{ background:#FBEAE3; color:var(--rust-dark); padding:12px 14px; border-radius:var(--radius-s); font-size:.86rem; margin-bottom:18px; display:none; }
+  .auth-error.show{ display:block; }
+  .account-grid{ display:grid; grid-template-columns:280px 1fr; gap:48px; align-items:start; }
+  .account-nav{ display:flex; flex-direction:column; gap:4px; }
+  .account-nav button{ text-align:left; padding:13px 16px; border:none; background:none; font-size:.92rem; border-radius:var(--radius-s); }
+  .account-nav button.active{ background:var(--bg-alt); font-weight:600; }
+  .order-card{ border:1px solid var(--line); border-radius:var(--radius-m); padding:22px; margin-bottom:16px; }
+  .order-card .row{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .status-pill{ font-size:.74rem; padding:4px 10px; border-radius:20px; background:var(--bg-alt); text-transform:capitalize; }
+  .status-pill.paid,.status-pill.delivered{ background:#E4EBDD; color:var(--olive); }
+  .status-pill.pending,.status-pill.placed{ background:#F1E7D6; color:#8A6A2A; }
+  .status-pill.failed,.status-pill.cancelled{ background:#FBEAE3; color:var(--rust-dark); }
+  @media (max-width:800px){ .account-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="announce">FREE DELIVERY IN NAIROBI ON ORDERS OVER KES 5,000 <span>&middot;</span> STYLE THAT SPEAKS FOR YOU</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">NASIEKU'S <small>STORE</small></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="shop.html?cat=clothes">Clothes</a>
+      <a href="shop.html?cat=shoes">Shoes</a>
+      <a href="shop.html?filter=new">New Arrivals</a>
+      <a href="shop.html?filter=offers">Offers</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-icons">
+      <button class="icon-btn" id="searchToggle" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <a class="icon-btn" href="account.html" aria-label="Account" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.6-3.6 5-5.4 7.5-5.4s5.9 1.8 7.5 5.4"/></svg>
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20.2s-7.6-4.6-9.8-9.2C.6 7.4 2.4 4 6 4c2.1 0 3.7 1.3 6 3.9C14.3 5.3 15.9 4 18 4c3.6 0 5.4 3.4 3.8 7-2.2 4.6-9.8 9.2-9.8 9.2z"/></svg>
+      </a>
+      <button class="icon-btn" id="cartToggle" aria-label="Shopping bag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8h12l1 12.5a1 1 0 01-1 1.1H6a1 1 0 01-1-1.1L6 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg>
+        <span class="icon-badge" data-cart-count style="display:none">0</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Logged-out: login / register -->
+  <div id="guestView" class="wrap" style="max-width:440px;padding:60px 0 100px;">
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="tabLogin">Log In</button>
+      <button type="button" class="auth-tab" id="tabRegister">Create Account</button>
+    </div>
+
+    <div class="auth-panel active" id="panelLogin">
+      <div class="auth-error" id="loginError"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="liEmail">Email</label>
+          <input type="email" id="liEmail" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="liPass">Password</label>
+          <input type="password" id="liPass" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+    </div>
+
+    <div class="auth-panel" id="panelRegister">
+      <div class="auth-error" id="registerError"></div>
+      <form id="registerForm">
+        <div class="field">
+          <label for="rName">Full name</label>
+          <input type="text" id="rName" required placeholder="Your name">
+        </div>
+        <div class="field">
+          <label for="rEmail">Email</label>
+          <input type="email" id="rEmail" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="rPhone">Phone</label>
+          <input type="tel" id="rPhone" required placeholder="07XX XXX XXX">
+        </div>
+        <div class="field">
+          <label for="rPass">Password</label>
+          <input type="password" id="rPass" required minlength="6" placeholder="At least 6 characters">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Logged-in: account dashboard -->
+  <div id="accountView" class="wrap" style="display:none;padding:50px 0 100px;">
+    <div class="page-header" style="padding:0 0 30px;border:none;">
+      <h1 id="welcomeMsg">Your Account</h1>
+    </div>
+    <div class="account-grid">
+      <nav class="account-nav">
+        <button type="button" class="active" data-panel="ordersPanel">My Orders</button>
+        <button type="button" data-panel="detailsPanel">Account Details</button>
+        <button type="button" id="logoutBtn" style="color:var(--rust-dark);">Log Out</button>
+      </nav>
+      <div>
+        <div id="ordersPanel">
+          <div id="ordersList"></div>
+        </div>
+        <div id="detailsPanel" style="display:none;">
+          <div class="info-card">
+            <h3 id="detName"></h3>
+            <ul>
+              <li id="detEmail"></li>
+              <li id="detPhone"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-about">
+      <a href="index.html" class="logo">NASIEKU'S</a>
+      <p>Style That Speaks for You. Curated fashion, footwear and accessories delivered across Kenya.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3v10.5a3.5 3.5 0 11-3.5-3.5"/><path d="M15 3c.4 2.6 2.1 4.4 4.5 4.7"/></svg></a>
+        <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20l1.3-3.9A7.8 7.8 0 1112 19.8a7.7 7.7 0 01-4-1.1z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>SHOP</h4>
+      <ul>
+        <li><a href="shop.html">All Products</a></li>
+        <li><a href="shop.html?cat=clothes">Clothes</a></li>
+        <li><a href="shop.html?cat=shoes">Shoes</a></li>
+        <li><a href="shop.html?filter=new">New Arrivals</a></li>
+        <li><a href="shop.html?filter=offers">Offers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>CUSTOMER SERVICE</h4>
+      <ul>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="shipping.html">Shipping &amp; Delivery</a></li>
+        <li><a href="returns.html">Returns &amp; Refunds</a></li>
+        <li><a href="track-order.html">Track Order</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-contact">
+      <h4>GET IN TOUCH</h4>
+      <ul>
+        <li><a href="tel:+254748525386">+254 748 525 386</a></li>
+        <li><a href="mailto:simonparsalat@gmail.com">simonparsalat@gmail.com</a></li>
+        <li>Nairobi, Kenya</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <div>&copy; <span data-year></span> NASIEKU'S STORE. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="admin-login.html">Admin Login</a>
+    </div>
+    <div class="pay-methods">M-PESA &middot; CARD &middot; CASH ON DELIVERY</div>
+  </div>
+</footer>
+
+<div class="overlay-scrim" id="scrim"></div>
+<div class="search-panel" id="searchPanel">
+  <div class="wrap">
+    <form id="searchForm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search for products…" autocomplete="off">
+      <button type="button" class="close" id="searchClose" aria-label="Close search">&times;</button>
+    </form>
+  </div>
+</div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag">
+  <div class="cart-head"><h3>Your Bag</h3><button class="close" id="cartClose" aria-label="Close bag">&times;</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">KES 0</span></div>
+    <a href="cart.html" class="btn btn-primary btn-block">View Bag &amp; Checkout</a>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function(){
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+  const panelLogin = document.getElementById("panelLogin");
+  const panelRegister = document.getElementById("panelRegister");
+
+  tabLogin.addEventListener("click", () => {
+    tabLogin.classList.add("active"); tabRegister.classList.remove("active");
+    panelLogin.classList.add("active"); panelRegister.classList.remove("active");
+  });
+  tabRegister.addEventListener("click", () => {
+    tabRegister.classList.add("active"); tabLogin.classList.remove("active");
+    panelRegister.classList.add("active"); panelLogin.classList.remove("active");
+  });
+
+  function showError(id, message){
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.classList.add("show");
+  }
+  function hideError(id){
+    document.getElementById(id).classList.remove("show");
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideError("loginError");
+    const email = document.getElementById("liEmail").value;
+    const password = document.getElementById("liPass").value;
+    try{
+      const res = await fetch(apiUrl("/api/auth/login"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not log in.");
+      setSession(data.token, data.user);
+      showToast("Welcome back, " + data.user.fullName.split(" ")[0] + "!");
+      renderAccountView();
+    }catch(err){
+      showError("loginError", err.message);
+    }
+  });
+
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideError("registerError");
+    const fullName = document.getElementById("rName").value;
+    const email = document.getElementById("rEmail").value;
+    const phone = document.getElementById("rPhone").value;
+    const password = document.getElementById("rPass").value;
+    try{
+      const res = await fetch(apiUrl("/api/auth/register"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, phone, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not create your account.");
+      setSession(data.token, data.user);
+      showToast("Account created — welcome, " + data.user.fullName.split(" ")[0] + "!");
+      renderAccountView();
+    }catch(err){
+      showError("registerError", err.message);
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    clearSession();
+    showToast("You've been logged out.");
+    renderAccountView();
+  });
+
+  document.querySelectorAll(".account-nav button[data-panel]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".account-nav button[data-panel]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("ordersPanel").style.display = btn.dataset.panel === "ordersPanel" ? "block" : "none";
+      document.getElementById("detailsPanel").style.display = btn.dataset.panel === "detailsPanel" ? "block" : "none";
+    });
+  });
+
+  async function loadOrders(){
+    const list = document.getElementById("ordersList");
+    list.innerHTML = "<p style='color:var(--ink-soft);'>Loading your orders…</p>";
+    try{
+      const res = await fetch(apiUrl("/api/orders/mine"), { headers: authHeaders() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not load orders.");
+      if (!data.orders.length){
+        list.innerHTML = "<div class='empty-state' style='text-align:left;padding:0;'><p style='margin-bottom:16px;'>You haven't placed any orders yet.</p><a href='shop.html' class='btn btn-outline'>Start Shopping</a></div>";
+        return;
+      }
+      list.innerHTML = data.orders.map(o => `
+        <div class="order-card">
+          <div class="row">
+            <strong>${o.orderNumber}</strong>
+            <span style="color:var(--ink-soft);font-size:.85rem;">${new Date(o.createdAt).toLocaleDateString("en-KE", { year:"numeric", month:"short", day:"numeric" })}</span>
+          </div>
+          <div class="row">
+            <span class="status-pill ${o.orderStatus}">${o.orderStatus.replace(/_/g," ")}</span>
+            <span class="status-pill ${o.paymentStatus}">${o.paymentStatus}</span>
+          </div>
+          <div style="font-size:.88rem;color:var(--ink-soft);margin-bottom:8px;">${o.items.map(i => `${i.quantity}&times; ${i.name}`).join(", ")}</div>
+          <div style="font-weight:600;">${formatKES(o.total)}</div>
+        </div>
+      `).join("");
+    }catch(err){
+      list.innerHTML = `<p style="color:var(--rust-dark);">${err.message}</p>`;
+    }
+  }
+
+  async function renderAccountView(){
+    const user = getStoredUser();
+    if (!user){
+      document.getElementById("guestView").style.display = "block";
+      document.getElementById("accountView").style.display = "none";
+      return;
+    }
+    document.getElementById("guestView").style.display = "none";
+    document.getElementById("accountView").style.display = "block";
+    document.getElementById("welcomeMsg").textContent = "Hi, " + user.fullName.split(" ")[0];
+    document.getElementById("detName").textContent = user.fullName;
+    document.getElementById("detEmail").textContent = "Email: " + user.email;
+    document.getElementById("detPhone").textContent = "Phone: " + (user.phone || "—");
+    await loadOrders();
+  }
+
+  renderAccountView();
+})();
+</script>
+</body>
+</html>

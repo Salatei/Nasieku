@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../nasiekus-backend"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "nasiekus-store"
+	}
+}

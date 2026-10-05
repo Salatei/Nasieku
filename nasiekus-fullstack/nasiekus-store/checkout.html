@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — NASIEKU'S STORE</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .pay-options{ display:flex; flex-direction:column; gap:12px; }
+  .pay-option{ border:1px solid var(--line); border-radius:var(--radius-m); padding:16px 18px; display:flex; align-items:center; gap:14px; cursor:pointer; }
+  .pay-option.selected{ border-color:var(--ink); background:var(--bg-alt); }
+  .pay-option input{ accent-color:var(--ink); width:16px; height:16px; }
+  .pay-option .pay-title{ font-weight:600; font-size:.94rem; }
+  .pay-option .pay-sub{ font-size:.8rem; color:var(--ink-soft); }
+  .mpesa-phone-field{ margin-top:14px; display:none; }
+  .mpesa-phone-field.show{ display:block; }
+  .checkout-state{ display:none; text-align:center; padding:80px 20px; max-width:460px; margin:0 auto; }
+  .checkout-state.active{ display:block; }
+  .spinner{ width:44px; height:44px; border:3px solid var(--line); border-top-color:var(--rust); border-radius:50%; margin:0 auto 26px; animation:spin 0.9s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .success-check{ width:64px; height:64px; border-radius:50%; background:var(--olive); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 22px; }
+  .success-check svg{ width:28px; height:28px; }
+  .fail-icon{ width:64px; height:64px; border-radius:50%; background:var(--rust); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 22px; font-size:1.6rem; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="announce">FREE DELIVERY IN NAIROBI ON ORDERS OVER KES 5,000 <span>&middot;</span> STYLE THAT SPEAKS FOR YOU</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">NASIEKU'S <small>STORE</small></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="shop.html?cat=clothes">Clothes</a>
+      <a href="shop.html?cat=shoes">Shoes</a>
+      <a href="shop.html?filter=new">New Arrivals</a>
+      <a href="shop.html?filter=offers">Offers</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-icons">
+      <a class="icon-btn" href="account.html" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.6-3.6 5-5.4 7.5-5.4s5.9 1.8 7.5 5.4"/></svg>
+      </a>
+      <button class="icon-btn" id="cartToggle" aria-label="Shopping bag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8h12l1 12.5a1 1 0 01-1 1.1H6a1 1 0 01-1-1.1L6 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg>
+        <span class="icon-badge" data-cart-count style="display:none">0</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-header">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Home</a> / <a href="cart.html">Bag</a> / <span>Checkout</span></div>
+      <h1>Checkout</h1>
+    </div>
+  </div>
+
+  <!-- Step 1: shipping + payment -->
+  <div class="wrap cart-page-grid" id="checkoutFormView">
+    <form id="checkoutForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="fName">Full name</label>
+          <input type="text" id="fName" required>
+        </div>
+        <div class="field">
+          <label for="fEmail">Email (optional)</label>
+          <input type="email" id="fEmail">
+        </div>
+        <div class="field">
+          <label for="fPhone">Phone number</label>
+          <input type="tel" id="fPhone" required placeholder="07XX XXX XXX">
+        </div>
+        <div class="field">
+          <label for="fCity">City / Town</label>
+          <input type="text" id="fCity" required value="Nairobi">
+        </div>
+        <div class="field full">
+          <label for="fAddress">Delivery address</label>
+          <textarea id="fAddress" required placeholder="Street, building, house/apartment number"></textarea>
+        </div>
+      </div>
+
+      <div class="opt-block">
+        <div class="opt-label"><span>Payment method</span></div>
+        <div class="pay-options">
+          <label class="pay-option selected" id="optMpesa">
+            <input type="radio" name="payMethod" value="mpesa" checked>
+            <div>
+              <div class="pay-title">M-Pesa</div>
+              <div class="pay-sub">Pay instantly with an STK push to your phone</div>
+            </div>
+          </label>
+          <div class="mpesa-phone-field show" id="mpesaPhoneField">
+            <div class="field">
+              <label for="mpesaPhone">M-Pesa phone number</label>
+              <input type="tel" id="mpesaPhone" placeholder="07XX XXX XXX">
+            </div>
+          </div>
+          <label class="pay-option" id="optCod">
+            <input type="radio" name="payMethod" value="cod">
+            <div>
+              <div class="pay-title">Cash on Delivery</div>
+              <div class="pay-sub">Pay the courier when your order arrives</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn" style="margin-top:10px;">Place Order</button>
+    </form>
+
+    <div class="summary-box">
+      <h3>Order Summary</h3>
+      <div id="summaryItems" style="margin-bottom:18px;"></div>
+      <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">KES 0</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">Calculated at checkout</span></div>
+      <div class="summary-row total"><span>Total</span><span id="sumTotal">KES 0</span></div>
+    </div>
+  </div>
+
+  <!-- Step 2: waiting for M-Pesa -->
+  <div class="checkout-state" id="statePending">
+    <div class="spinner"></div>
+    <h2 style="font-size:1.3rem;margin-bottom:10px;">Check your phone</h2>
+    <p style="color:var(--ink-soft);">We've sent an M-Pesa prompt to <strong id="pendingPhone"></strong>. Enter your PIN to complete payment for order <strong id="pendingOrderNum"></strong>.</p>
+    <button type="button" class="btn btn-outline" id="checkStatusBtn" style="margin-top:26px;">I've paid — check status</button>
+  </div>
+
+  <!-- Step 3a: payment success -->
+  <div class="checkout-state" id="stateSuccess">
+    <div class="success-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+    <h2 style="font-size:1.4rem;margin-bottom:10px;">Order confirmed</h2>
+    <p style="color:var(--ink-soft);margin-bottom:6px;">Order <strong id="successOrderNum"></strong> is on its way to being packed.</p>
+    <p style="color:var(--ink-soft);" id="successNote"></p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
+      <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+      <a href="account.html" class="btn btn-primary">View My Orders</a>
+    </div>
+  </div>
+
+  <!-- Step 3b: payment failed -->
+  <div class="checkout-state" id="stateFailed">
+    <div class="fail-icon">!</div>
+    <h2 style="font-size:1.4rem;margin-bottom:10px;">Payment didn't go through</h2>
+    <p style="color:var(--ink-soft);" id="failReason">The M-Pesa payment wasn't completed.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;">
+      <button type="button" class="btn btn-outline" id="retryPayBtn">Try Again</button>
+      <a href="cart.html" class="btn btn-primary">Back to Bag</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-bottom" style="border-top:1px solid var(--dark-line);">
+    <div>&copy; <span data-year></span> NASIEKU'S STORE. All rights reserved.</div>
+    <div class="pay-methods">M-PESA &middot; CARD &middot; CASH ON DELIVERY</div>
+  </div>
+</footer>
+
+<div class="overlay-scrim" id="scrim"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag">
+  <div class="cart-head"><h3>Your Bag</h3><button class="close" id="cartClose" aria-label="Close bag">&times;</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">KES 0</span></div>
+    <a href="cart.html" class="btn btn-primary btn-block">View Bag &amp; Checkout</a>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(async function(){
+  await loadProducts();
+
+  if (!Cart.items.length){
+    window.location.href = "cart.html";
+    return;
+  }
+
+  // Prefill from a logged-in session, if any
+  const user = getStoredUser();
+  if (user){
+    document.getElementById("fName").value = user.fullName || "";
+    document.getElementById("fEmail").value = user.email || "";
+    document.getElementById("fPhone").value = user.phone || "";
+  }
+
+  function renderSummary(){
+    const rows = Cart.items.map(item => {
+      const p = getProductById(item.id);
+      if (!p) return "";
+      return `<div style="display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:10px;color:var(--ink-soft);">
+        <span>${item.qty}&times; ${p.name} (${item.size})</span>
+        <span>${formatKES(p.price * item.qty)}</span>
+      </div>`;
+    }).join("");
+    document.getElementById("summaryItems").innerHTML = rows;
+
+    const subtotal = Cart.subtotal();
+    document.getElementById("sumSubtotal").textContent = formatKES(subtotal);
+    document.getElementById("sumTotal").textContent = formatKES(subtotal); // delivery fee is finalised server-side
+  }
+  renderSummary();
+
+  // Payment method toggle
+  const radios = document.querySelectorAll('input[name="payMethod"]');
+  radios.forEach(r => r.addEventListener("change", () => {
+    document.getElementById("optMpesa").classList.toggle("selected", r.value === "mpesa" && r.checked);
+    document.getElementById("optCod").classList.toggle("selected", r.value === "cod" && r.checked);
+    document.getElementById("mpesaPhoneField").classList.toggle("show", document.querySelector('input[name="payMethod"]:checked').value === "mpesa");
+  }));
+
+  function showState(id){
+    document.getElementById("checkoutFormView").style.display = id === "form" ? "grid" : "none";
+    ["statePending","stateSuccess","stateFailed"].forEach(s => {
+      document.getElementById(s).classList.toggle("active", s === id);
+    });
+  }
+
+  let currentOrder = null;
+  let currentCheckoutId = null;
+  let pollTimer = null;
+
+  async function createOrderAndPay(){
+    const paymentMethod = document.querySelector('input[name="payMethod"]:checked').value;
+    const items = Cart.items.map(i => ({ productId: i.id, size: i.size, quantity: i.qty }));
+
+    const payload = {
+      fullName: document.getElementById("fName").value,
+      email: document.getElementById("fEmail").value || undefined,
+      phone: document.getElementById("fPhone").value,
+      deliveryAddress: document.getElementById("fAddress").value,
+      city: document.getElementById("fCity").value,
+      paymentMethod, items
+    };
+
+    const btn = document.getElementById("placeOrderBtn");
+    btn.disabled = true; btn.textContent = "Placing order…";
+
+    try{
+      const res = await fetch(apiUrl("/api/orders"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not place your order.");
+      currentOrder = data.order;
+
+      if (paymentMethod === "cod"){
+        Cart.clear();
+        document.getElementById("successOrderNum").textContent = currentOrder.orderNumber;
+        document.getElementById("successNote").textContent = "Pay the courier " + formatKES(currentOrder.total) + " when your order arrives.";
+        showState("stateSuccess");
+        return;
+      }
+
+      // M-Pesa: trigger STK push
+      const mpesaPhone = document.getElementById("mpesaPhone").value || payload.phone;
+      const stkRes = await fetch(apiUrl("/api/mpesa/stkpush"), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: currentOrder.id, phone: mpesaPhone })
+      });
+      const stkData = await stkRes.json();
+      if (!stkRes.ok) throw new Error(stkData.error || "Could not start the M-Pesa payment.");
+
+      currentCheckoutId = stkData.checkoutRequestId;
+      document.getElementById("pendingPhone").textContent = mpesaPhone;
+      document.getElementById("pendingOrderNum").textContent = currentOrder.orderNumber;
+      showState("statePending");
+      pollPaymentStatus();
+
+    }catch(err){
+      showToast(err.message);
+      btn.disabled = false; btn.textContent = "Place Order";
+    }
+  }
+
+  async function pollPaymentStatus(attempt = 0){
+    clearTimeout(pollTimer);
+    if (attempt > 20){ // ~60s of polling
+      document.getElementById("failReason").textContent = "We haven't heard back from M-Pesa yet. If you completed the prompt, check My Orders shortly — otherwise, try again.";
+      showState("stateFailed");
+      return;
+    }
+    try{
+      const res = await fetch(apiUrl("/api/mpesa/status/" + currentCheckoutId));
+      const data = await res.json();
+      if (data.status === "success"){
+        Cart.clear();
+        document.getElementById("successOrderNum").textContent = currentOrder.orderNumber;
+        document.getElementById("successNote").textContent = data.mpesaReceiptNumber ? ("M-Pesa receipt: " + data.mpesaReceiptNumber) : "Payment received.";
+        showState("stateSuccess");
+        return;
+      }
+      if (data.status === "failed" || data.status === "cancelled"){
+        document.getElementById("failReason").textContent = data.resultDesc || "The M-Pesa payment wasn't completed.";
+        showState("stateFailed");
+        return;
+      }
+    }catch(err){ /* keep polling */ }
+    pollTimer = setTimeout(() => pollPaymentStatus(attempt + 1), 3000);
+  }
+
+  document.getElementById("checkStatusBtn").addEventListener("click", async () => {
+    if (!currentCheckoutId) return;
+    try{
+      await fetch(apiUrl("/api/mpesa/status/" + currentCheckoutId + "/query"), { method: "POST" });
+    }catch(e){ /* ignore — fall through to poll's own status read */ }
+    pollPaymentStatus(0);
+  });
+
+  document.getElementById("retryPayBtn").addEventListener("click", () => {
+    showState("form");
+    document.getElementById("placeOrderBtn").disabled = false;
+    document.getElementById("placeOrderBtn").textContent = "Place Order";
+  });
+
+  document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    createOrderAndPay();
+  });
+
+  showState("form");
+})();
+</script>
+</body>
+</html>
