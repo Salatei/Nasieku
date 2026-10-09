@@ -1,0 +1,17 @@
+{
+  "name": "nasiekus-store",
+  "version": "1.0.0",
+  "description": "Frontend for NASIEKU'S STORE - static HTML/CSS/JS",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve . -l 5500",
+    "start": "serve . -l 5500",
+    "preview": "serve ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
