@@ -3,7 +3,7 @@
    Change API_BASE if your backend runs somewhere other than localhost:4000
    (e.g. after deploying it) — every other file reads from this constant.
    ========================================================================== */
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://nasieku.onrender.com";
 
 function apiUrl(path){
   return API_BASE + path;

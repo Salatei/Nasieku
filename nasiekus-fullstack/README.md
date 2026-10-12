@@ -68,5 +68,16 @@ Wherever it ends up, update `API_BASE` in `js/config.js`, `CORS_ORIGIN` in
 the backend's `.env`, and switch `MPESA_ENV`/`MPESA_BASE_URL` to production
 once you have a live Safaricom shortcode.
 
+**Currently deployed:**
+
+- Frontend (Vercel): `https://nasieku-nasiekus-store-loc3.vercel.app`
+- Backend (Render): `https://nasieku.onrender.com`
+
+The frontend calls the backend via `API_BASE` in `nasiekus-store/js/config.js`.
+On Render, set the `CORS_ORIGIN` environment variable (Render does **not** read
+the repo `.env`) to include the Vercel origin:
+`https://nasieku-nasiekus-store-loc3.vercel.app`. Set `MPESA_CALLBACK_URL` to
+`https://nasieku.onrender.com/api/mpesa/callback` for live M-Pesa callbacks.
+
 See `nasiekus-backend/README.md` for the full API reference and M-Pesa
 sandbox setup walkthrough.
