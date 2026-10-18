@@ -85,5 +85,17 @@ starter catalog automatically, so set `JWT_SECRET`, `ADMIN_EMAIL`/
 `ADMIN_PASSWORD` and `MPESA_*` env vars on Render. Set `MPESA_CALLBACK_URL` to
 `https://nasieku.onrender.com/api/mpesa/callback` for live M-Pesa callbacks.
 
+Deployment config in the repo:
+
+- `render.yaml` (repo root) — Render Blueprint for the backend: service
+  definition, env vars, and a 1 GB persistent disk mounted at `/var/data`.
+  Set `DATA_DIR=/var/data` (the blueprint does this) and the SQLite file +
+  `uploads/` live on the disk instead of the instance's ephemeral storage.
+  Disks need a paid Render plan; on the free plan the disk is skipped and
+  each restart falls back to an empty database + automatic reseed of the
+  starter catalog and admin account.
+- `nasiekus-store/vercel.json` — pins the frontend as a plain static deploy
+  (no framework, no build step), so Vercel can't mis-detect a Node build.
+
 See `nasiekus-backend/README.md` for the full API reference and M-Pesa
 sandbox setup walkthrough.

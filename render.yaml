@@ -1,0 +1,39 @@
+# Render Blueprint — reproducible definition of the backend service.
+# The persistent disk keeps the SQLite database and uploaded images across
+# deploys/restarts (disks require a paid Render plan; on the free plan the
+# disk is omitted by the platform and the app reseeds the starter catalog
+# on each boot instead).
+services:
+  - type: web
+    name: nasieku
+    runtime: node
+    rootDir: nasiekus-fullstack/nasiekus-backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: simonparsalat@gmail.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: MPESA_BASE_URL
+        value: https://sandbox.safaricom.co.ke
+      - key: MPESA_CONSUMER_KEY
+        sync: false
+      - key: MPESA_CONSUMER_SECRET
+        sync: false
+      - key: MPESA_SHORTCODE
+        sync: false
+      - key: MPESA_PASSKEY
+        sync: false
+      - key: MPESA_CALLBACK_URL
+        value: https://nasieku.onrender.com/api/mpesa/callback
+      - key: CORS_ORIGIN
+        sync: false
+    disk:
+      name: nasieku-data
+      mountPath: /var/data
+      sizeGB: 1

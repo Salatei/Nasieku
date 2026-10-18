@@ -1,8 +1,9 @@
 // server.js
 require("dotenv").config();
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
+
+const { uploadsDir } = require("./paths");
 
 require("./db/connection"); // ensures schema is created before routes load
 require("./db/seed"); // idempotent — creates the admin + starter catalog only when missing (fresh deploys)
@@ -43,7 +44,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadsDir));
 
 app.get("/api/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
