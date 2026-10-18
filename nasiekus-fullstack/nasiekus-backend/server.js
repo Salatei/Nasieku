@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 
 require("./db/connection"); // ensures schema is created before routes load
+require("./db/seed"); // idempotent — creates the admin + starter catalog only when missing (fresh deploys)
 
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
@@ -14,15 +15,28 @@ const adminRoutes = require("./routes/admin");
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || "").split(",").map(s => s.trim()).filter(Boolean);
+// Origins that are always allowed, merged with the CORS_ORIGIN env var so a
+// missing/wrong Render setting can never lock out the real frontend again.
+const KNOWN_ORIGINS = [
+  "https://nasieku-nasiekus-store-loc3.vercel.app",
+  "http://localhost:5500",
+  "http://127.0.0.1:5500",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000"
+];
+const envOrigins = (process.env.CORS_ORIGIN || "").split(",").map(s => s.trim()).filter(Boolean);
+const allowedOrigins = [...new Set([...KNOWN_ORIGINS, ...envOrigins])];
+
 app.use(cors({
   origin: (origin, callback) => {
     // Allow same-origin/non-browser requests (no Origin header) and anything opening index.html
     // directly from disk (origin "null"), in addition to the configured list.
-    if (!origin || origin === "null" || allowedOrigins.length === 0 || allowedOrigins.includes(origin)){
+    if (!origin || origin === "null" || allowedOrigins.includes(origin)){
       return callback(null, true);
     }
-    callback(new Error("Not allowed by CORS"));
+    const err = new Error(`Not allowed by CORS — add ${origin} to CORS_ORIGIN`);
+    err.status = 403;
+    callback(err);
   },
   credentials: true
 }));

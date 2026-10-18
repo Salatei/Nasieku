@@ -15,6 +15,9 @@ function seedAdmin(){
     console.log(`Admin account already exists (${email}) — skipping.`);
     return;
   }
+  if (!process.env.ADMIN_PASSWORD){
+    console.warn("WARNING: ADMIN_PASSWORD is not set — admin account uses the insecure default 'changeme123'. Set ADMIN_PASSWORD on the server.");
+  }
   const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD || "changeme123", 10);
   db.prepare(`
     INSERT INTO users (full_name, email, phone, password_hash, role)

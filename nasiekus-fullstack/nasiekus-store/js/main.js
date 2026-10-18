@@ -119,14 +119,58 @@ function initFAQ(){
   });
 }
 
-/* ---- Order tracking demo ----------------------------------------------------*/
+/* ---- Order tracking (GET /api/orders/track/:orderNumber) -------------------*/
+function renderTrackResult(order){
+  const numEl = document.getElementById("trackOrderNumber");
+  const noteEl = document.getElementById("trackPaymentNote");
+  const stepsEl = document.getElementById("trackSteps");
+  if (numEl) numEl.textContent = "Order " + order.orderNumber;
+  if (noteEl) noteEl.textContent = "Payment " + (order.paymentStatus || "pending") + " · " + formatKES(order.total);
+  if (!stepsEl) return;
+
+  const steps = [
+    { key: "placed", label: "Order Placed" },
+    { key: "packed", label: "Packed" },
+    { key: "out_for_delivery", label: "Out for Delivery" },
+    { key: "delivered", label: "Delivered" }
+  ];
+  const idx = steps.findIndex(s => s.key === order.orderStatus);
+  const cancelled = idx === -1;
+  const visible = cancelled ? steps.slice(0, 1) : steps;
+  stepsEl.innerHTML = visible.map((s, i) => {
+    const done = (!cancelled && i <= idx) || (cancelled && i === 0);
+    return `<div class="track-step${done ? " done" : ""}"><div class="dot"></div>${s.label}</div>`;
+  }).join("") + (cancelled ? `<div class="track-step"><div class="dot"></div>Cancelled</div>` : "");
+}
+
 function initTrackOrder(){
   const form = document.getElementById("trackForm");
   if (!form) return;
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    document.getElementById("trackResult")?.classList.add("show");
-    document.getElementById("trackResult")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    const input = document.getElementById("trackOrderInput");
+    const msg = document.getElementById("trackMessage");
+    const result = document.getElementById("trackResult");
+    const orderNumber = (input && input.value ? input.value : "").trim().toUpperCase();
+    if (!orderNumber) return;
+
+    if (msg) msg.textContent = "Checking order status…";
+    try{
+      const res = await fetch(apiUrl("/api/orders/track/" + encodeURIComponent(orderNumber)));
+      const data = await res.json();
+      if (!res.ok){
+        result?.classList.remove("show");
+        if (msg) msg.textContent = data.error || "Order not found.";
+        return;
+      }
+      if (msg) msg.textContent = "";
+      renderTrackResult(data);
+      result?.classList.add("show");
+      result?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }catch(err){
+      result?.classList.remove("show");
+      if (msg) msg.textContent = "Can't reach the store server — is the backend running at " + API_BASE + "?";
+    }
   });
 }
 

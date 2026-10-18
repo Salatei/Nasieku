@@ -1,9 +1,17 @@
 /* ==========================================================================
    NASIEKU'S STORE — API configuration
-   Change API_BASE if your backend runs somewhere other than localhost:4000
-   (e.g. after deploying it) — every other file reads from this constant.
+   API_BASE is chosen automatically: pages served locally (localhost /
+   127.0.0.1 / file://) talk to the local backend on :4000, anything deployed
+   (Vercel) talks to the production API on Render. Every other file reads
+   from this constant.
    ========================================================================== */
-const API_BASE = "https://nasieku.onrender.com";
+const LOCAL_API_BASE = "http://localhost:4000";
+const PROD_API_BASE = "https://nasieku.onrender.com";
+
+const _host = window.location.hostname;
+const API_BASE = (!_host || _host === "localhost" || _host === "127.0.0.1" || _host === "0.0.0.0")
+  ? LOCAL_API_BASE
+  : PROD_API_BASE;
 
 function apiUrl(path){
   return API_BASE + path;

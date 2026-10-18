@@ -54,22 +54,17 @@
 
   <div class="wrap" style="padding:44px 0 100px;">
     <form id="trackForm" class="track-form">
-      <input type="text" placeholder="Order number, e.g. NS-10456" required>
+      <input type="text" id="trackOrderInput" placeholder="Order number, e.g. NS-10456" required>
       <button type="submit" class="btn btn-primary">Track</button>
     </form>
-    <p style="font-size:.82rem;color:var(--ink-soft);">This is a front-end demo — connect an order-management backend to show live status here.</p>
+    <p id="trackMessage" style="font-size:.82rem;color:var(--ink-soft);"></p>
 
     <div class="track-result" id="trackResult">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
-        <div><strong>Order NS-10456</strong></div>
-        <div style="color:var(--ink-soft);font-size:.86rem;">Estimated delivery: 2 business days</div>
+        <div><strong id="trackOrderNumber">Order</strong></div>
+        <div id="trackPaymentNote" style="color:var(--ink-soft);font-size:.86rem;"></div>
       </div>
-      <div class="track-steps">
-        <div class="track-step done"><div class="dot"></div>Order Placed</div>
-        <div class="track-step done"><div class="dot"></div>Packed</div>
-        <div class="track-step done"><div class="dot"></div>Out for Delivery</div>
-        <div class="track-step"><div class="dot"></div>Delivered</div>
-      </div>
+      <div class="track-steps" id="trackSteps"></div>
     </div>
   </div>
 

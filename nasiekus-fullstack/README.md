@@ -44,9 +44,10 @@ backend.
 
 ## How the pieces connect
 
-- `nasiekus-store/js/config.js` holds `API_BASE` — the only place you need
-  to change the URL if you deploy the backend somewhere other than
-  `localhost:4000`.
+- `nasiekus-store/js/config.js` picks the API URL automatically: pages served
+  from `localhost`/`127.0.0.1` (or opened via `file://`) call
+  `http://localhost:4000`, anything deployed calls the production API. Change
+  `LOCAL_API_BASE` / `PROD_API_BASE` there if either endpoint moves.
 - `js/products.js` fetches the live catalog from `/api/products` instead of
   using hardcoded data — every page (`index`, `shop`, `product`, `cart`)
   awaits this before rendering.
@@ -64,19 +65,24 @@ The frontend is static — host it anywhere (Netlify, Vercel, GitHub Pages, a
 plain web server). The backend needs a Node host with persistent disk for
 SQLite and `/uploads` (Render, Railway, a VPS, etc.) — serverless platforms
 that wipe disk between requests won't keep your database or uploaded images.
-Wherever it ends up, update `API_BASE` in `js/config.js`, `CORS_ORIGIN` in
-the backend's `.env`, and switch `MPESA_ENV`/`MPESA_BASE_URL` to production
-once you have a live Safaricom shortcode.
+Wherever it ends up, update `PROD_API_BASE` in `js/config.js`, and add its
+origin to the backend's `CORS_ORIGIN` (the API always allows its known origins
+from `server.js`, plus anything in `CORS_ORIGIN`), and switch
+`MPESA_ENV`/`MPESA_BASE_URL` to production once you have a live Safaricom
+shortcode.
 
 **Currently deployed:**
 
 - Frontend (Vercel): `https://nasieku-nasiekus-store-loc3.vercel.app`
 - Backend (Render): `https://nasieku.onrender.com`
 
-The frontend calls the backend via `API_BASE` in `nasiekus-store/js/config.js`.
-On Render, set the `CORS_ORIGIN` environment variable (Render does **not** read
-the repo `.env`) to include the Vercel origin:
-`https://nasieku-nasiekus-store-loc3.vercel.app`. Set `MPESA_CALLBACK_URL` to
+The frontend calls the backend via the `API_BASE` chosen in
+`nasiekus-store/js/config.js`. The API's known origins (including the Vercel
+URL above) are set in `server.js`, so use the `CORS_ORIGIN` environment
+variable (Render does **not** read the repo `.env`) for any additional origin.
+On first boot against an empty database the server seeds the admin account and
+starter catalog automatically, so set `JWT_SECRET`, `ADMIN_EMAIL`/
+`ADMIN_PASSWORD` and `MPESA_*` env vars on Render. Set `MPESA_CALLBACK_URL` to
 `https://nasieku.onrender.com/api/mpesa/callback` for live M-Pesa callbacks.
 
 See `nasiekus-backend/README.md` for the full API reference and M-Pesa
