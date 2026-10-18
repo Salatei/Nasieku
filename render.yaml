@@ -11,6 +11,9 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      # DATA_DIR must point at the disk mount below. If the service ends up
+      # without a disk (free plan has none), paths.js logs a warning and
+      # falls back to the in-repo database instead of failing to boot.
       - key: DATA_DIR
         value: /var/data
       - key: JWT_SECRET

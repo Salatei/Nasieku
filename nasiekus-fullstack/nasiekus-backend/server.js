@@ -6,7 +6,14 @@ const cors = require("cors");
 const { uploadsDir } = require("./paths");
 
 require("./db/connection"); // ensures schema is created before routes load
-require("./db/seed"); // idempotent — creates the admin + starter catalog only when missing (fresh deploys)
+// Idempotent — creates the admin + starter catalog only when missing.
+// A seed failure must not stop the server: better a running API with an
+// incomplete catalog than a deploy that dies with "no open ports detected".
+try {
+  require("./db/seed");
+} catch (e){
+  console.error("Seed failed — continuing without reseeding:", e);
+}
 
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
