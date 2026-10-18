@@ -2,6 +2,9 @@
   "name": "nasiekus-fullstack",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
   "description": "NASIEKU'S STORE fullstack monorepo",
   "workspaces": [],
   "scripts": {

@@ -71,5 +71,5 @@ app.use((req, res) => res.status(404).json({ error: "Not found." }));
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`NASIEKU'S STORE API running on http://localhost:${PORT}`);
+  console.log(`NASIEKU'S STORE API running on http://localhost:${PORT} (node ${process.version})`);
 });
