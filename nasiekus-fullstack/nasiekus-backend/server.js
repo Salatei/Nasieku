@@ -35,11 +35,24 @@ const KNOWN_ORIGINS = [
 const envOrigins = (process.env.CORS_ORIGIN || "").split(",").map(s => s.trim()).filter(Boolean);
 const allowedOrigins = [...new Set([...KNOWN_ORIGINS, ...envOrigins])];
 
+// Any HTTPS Vercel origin is allowed too (production aliases, preview
+// deployments, future custom setups) — auth is bearer-token based, so
+// there's no cookie for a foreign site to abuse.
+function isAllowedOrigin(origin){
+  if (!origin || origin === "null" || allowedOrigins.includes(origin)) return true;
+  try{
+    const u = new URL(origin);
+    return u.protocol === "https:" && (u.hostname === "vercel.app" || u.hostname.endsWith(".vercel.app"));
+  }catch(e){
+    return false;
+  }
+}
+
 app.use(cors({
   origin: (origin, callback) => {
     // Allow same-origin/non-browser requests (no Origin header) and anything opening index.html
     // directly from disk (origin "null"), in addition to the configured list.
-    if (!origin || origin === "null" || allowedOrigins.includes(origin)){
+    if (isAllowedOrigin(origin)){
       return callback(null, true);
     }
     const err = new Error(`Not allowed by CORS — add ${origin} to CORS_ORIGIN`);

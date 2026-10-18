@@ -156,7 +156,7 @@ function initTrackOrder(){
 
     if (msg) msg.textContent = "Checking order status…";
     try{
-      const res = await fetch(apiUrl("/api/orders/track/" + encodeURIComponent(orderNumber)));
+      const res = await apiFetch("/api/orders/track/" + encodeURIComponent(orderNumber));
       const data = await res.json();
       if (!res.ok){
         result?.classList.remove("show");

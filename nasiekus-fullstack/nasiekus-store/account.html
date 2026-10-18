@@ -302,7 +302,7 @@
     const list = document.getElementById("ordersList");
     list.innerHTML = "<p style='color:var(--ink-soft);'>Loading your orders…</p>";
     try{
-      const res = await fetch(apiUrl("/api/orders/mine"), { headers: authHeaders() });
+      const res = await apiFetch("/api/orders/mine", { headers: authHeaders() });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not load orders.");
       if (!data.orders.length){

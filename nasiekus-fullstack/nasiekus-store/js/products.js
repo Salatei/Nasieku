@@ -17,7 +17,7 @@ async function loadProducts(force = false){
 
   _productsPromise = (async () => {
     try{
-      const res = await fetch(apiUrl("/api/products"));
+      const res = await apiFetch("/api/products");
       if (!res.ok) throw new Error("Failed to load products (" + res.status + ")");
       const data = await res.json();
       PRODUCTS = (data.products || []).map(normalizeProduct);
@@ -51,7 +51,7 @@ function getProductById(id){
 // shared link works even if that item isn't in a cached PRODUCTS list yet.
 async function fetchProductById(id){
   try{
-    const res = await fetch(apiUrl("/api/products/" + encodeURIComponent(id)));
+    const res = await apiFetch("/api/products/" + encodeURIComponent(id));
     if (!res.ok) return null;
     const data = await res.json();
     return normalizeProduct(data.product);
@@ -72,6 +72,6 @@ function showApiOfflineNotice(){
   const bar = document.createElement("div");
   bar.id = "apiOfflineNotice";
   bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:300;background:#7E3315;color:#fff;text-align:center;padding:10px 16px;font-size:.82rem;font-family:sans-serif;";
-  bar.textContent = "Can't reach the store server — is the backend running at " + API_BASE + "?";
+  bar.textContent = "Can't reach the store server at " + API_BASE + " — the backend may still be waking up (Render sleeps after ~15 min idle). It was retried for about a minute; refresh again in a moment.";
   document.body.appendChild(bar);
 }

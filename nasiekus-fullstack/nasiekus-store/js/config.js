@@ -17,6 +17,39 @@ function apiUrl(path){
   return API_BASE + path;
 }
 
+// apiFetch — fetch() with patient retries for GET/HEAD requests.
+// The Render free instance sleeps after ~15 min idle; its first request
+// takes 30-60s (the edge may even answer without CORS headers while it
+// wakes, which the browser reports as an opaque network error). Retrying
+// across that window turns a scary "can't reach the server" failure into a
+// slow-but-working page load.
+// Non-idempotent methods (POST/PUT/...) are NOT auto-retried — a retry
+// could duplicate an order or an M-Pesa STK push if the first request
+// actually landed and only the response was lost.
+async function apiFetch(path, options){
+  const url = apiUrl(path);
+  const method = ((options && options.method) || "GET").toUpperCase();
+  const canRetry = method === "GET" || method === "HEAD";
+  const delays = canRetry ? [0, 3000, 6000, 10000, 15000] : [0];
+  let lastErr = null;
+  for (let i = 0; i < delays.length; i++){
+    if (delays[i]) await new Promise(r => setTimeout(r, delays[i]));
+    try{
+      const res = await fetch(url, options);
+      // A 5xx usually means the instance was mid-restart — retry GETs.
+      if (res.status >= 500 && i < delays.length - 1){
+        lastErr = new Error("Server error " + res.status);
+        continue;
+      }
+      return res;
+    }catch(err){
+      lastErr = err; // network failure / missing CORS headers (cold start)
+      if (!canRetry) throw err;
+    }
+  }
+  throw lastErr || new Error("API unreachable");
+}
+
 function authHeaders(){
   const token = localStorage.getItem("nasiekus_token");
   return token ? { "Authorization": "Bearer " + token } : {};
